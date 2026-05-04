@@ -1,7 +1,16 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from pathlib import Path
+import argparse
 from fluorescence_loader.compute_intensity import Compute_with_asrry, ComputeMean_with_asrry, Compute_tot_max, Auto_ROI_brightest_region, Compute_intensity_timeframe
 
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+        "--file_path",
+        type=Path,
+        help="Folder with path containing nd2 files",
+    )
 
 def plot_intensity(mean_intensity):
     plt.plot(mean_intensity, marker='o')
@@ -9,7 +18,10 @@ def plot_intensity(mean_intensity):
     plt.ylabel("Mean intensity")
     plt.title("Fluorescence Intensity vs Time")
     plt.grid()
-    plt.show()
+    plt.savefig('Fluorescence_Intensity_with_Time.png')
+    plt.savefig('Fluorescence_Intensity_with_Time.pdf')
+    #plt.show()
+    plt.close()
 
 def plot_intensity_realtime(times, mean_intensity):
     plt.plot(times, mean_intensity, marker='o')
@@ -17,7 +29,10 @@ def plot_intensity_realtime(times, mean_intensity):
     plt.ylabel("Mean intensity")
     plt.title("Intensity vs Time (real time)")
     plt.grid()
-    plt.show()
+    plt.savefig('Intensity_with_Real_Time.png')
+    plt.savefig('Intensity_with_Real_Time.pdf')
+    #plt.show()
+    plt.close()
 
 def plot_tot_max_median(tot, max_int, median):
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3, constrained_layout=True)
@@ -35,6 +50,10 @@ def plot_tot_max_median(tot, max_int, median):
     ax3.plot(max_int, 'tab:purple')
     ax3.set_xlabel("Time frame")
     ax3.set_title('Median')
+    plt.savefig('Time_Frame.png')
+    plt.savefig('Time_Frame.pdf')
+    #plt.show()
+    plt.close()
  
     plt.show()
 
@@ -43,13 +62,19 @@ def plot_auto_roi(time, mean_intensity, visroi=None):
     plt.xlabel("Time")
     plt.ylabel("ROI intensity")
     plt.title("Auto ROI Intensity vs Time")
-    plt.show()
+    plt.savefig('Auto_ROI_Intensity_Time.png')
+    plt.savefig('Auto_ROI_Intensity_Time.pdf')
+    plt.close()
+    #plt.show()
 
     if(visroi):
         plt.imshow(first_frame, cmap='gray')
         plt.scatter([x], [y], color='red', s=50)
         plt.title("Auto ROI center")
-        plt.show()
+        plt.savefig('Auto_ROI_center.png')
+        plt.savefig('Auto_ROI_center.pdf')
+        plt.close()
+        #plt.show()
 
 def plot_xy_intensity(vmin, vmax, data, indices, n_plots = 10):
     # -----------------------------
@@ -81,14 +106,23 @@ def plot_xy_intensity(vmin, vmax, data, indices, n_plots = 10):
         ax.axis('off')
 
     plt.subplots_adjust(wspace=0.1, hspace=0.3)
-    plt.show()
+    #plt.show()
 
-    plt.savefig("time_series_grid.png", dpi=300)
+    plt.savefig("time_series_grid.png")
+    plt.savefig("time_series_grid.pdf")
+    plt.close()
 
 
 def main():
 
-    mean_intensity = ComputeMean_with_asrry()
+    args = parser.parse_args()
+    infile = args.file_path
+    if not infile:
+        raise ValueError("Please input a valid nd2 file !!") 
+    else:
+        print(f"Input Files Processing : {infile}")
+
+    mean_intensity = ComputeMean_with_asrry(infile)
     #print("Intensity", mean_intensity)
 
     #time = RealTime_Extract()
@@ -101,27 +135,27 @@ def main():
     print("time shape:", np.shape(time))
     print("mean shape:", np.shape(mean_intensity))
 
-    #plot_intensity(mean_intensity)  #open it
+    plot_intensity(mean_intensity)  #open it
 
     dt = 15 / 94
     times = np.arange(94) * dt
 
-    #plot_intensity_realtime(times, mean_intensity #Open it)
+    plot_intensity_realtime(times, mean_intensity) #Open it)
 
-    total_intn, max_intn, median =  Compute_tot_max()
+    total_intn, max_intn, median =  Compute_tot_max(infile)
     
-    #plot_tot_max_median(total_intn, max_intn, median) #open it
+    plot_tot_max_median(total_intn, max_intn, median) #open it
 
     #print(f"tot: {total_intn} : max_intn : {max_intn} : median {median}")
 
-    intensity_roi_mean = Auto_ROI_brightest_region()
+    intensity_roi_mean = Auto_ROI_brightest_region(infile)
     time = np.arange(len(intensity_roi_mean))
 
-    #plot_auto_roi(time, intensity_roi_mean) #open it
+    plot_auto_roi(time, intensity_roi_mean) #open it
 
     n_plots = 10
 
-    vmin, vmax, data_intensity, indices  = Compute_intensity_timeframe(10)
+    vmin, vmax, data_intensity, indices  = Compute_intensity_timeframe(infile, 10)
     plot_xy_intensity(vmin, vmax, data_intensity, indices)
 
     

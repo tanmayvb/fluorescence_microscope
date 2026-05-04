@@ -1,11 +1,13 @@
 import nd2
 import numpy as np
 
-file_path = "/Users/tanmay/LenevoINFN/Work/BratatiImageJ/InFile/nd005.nd2"
+#file_path = "/Users/tanmay/LenevoINFN/Work/BratatiImageJ/InFile/nd005.nd2"
 
 mean_intensity = []
 
 def ComputeMean():
+
+    file_path = InputFile()
     with nd2.ND2File(file_path) as f:
         for i in range(f.sizes['T']):
             frame = f[i]   # load ONE frame only
@@ -17,6 +19,8 @@ def ComputeMean():
 intensity_asrry = []
 
 def Compute_with_asrry():
+   
+    file_path = InputFile()
     with nd2.ND2File(file_path) as f:
         data = f.asarray()
     
@@ -28,7 +32,8 @@ def Compute_with_asrry():
 
 intensity_mean_asrry = []
 
-def ComputeMean_with_asrry():
+def ComputeMean_with_asrry(file_path):
+
     with nd2.ND2File(file_path) as f:
         data = f.asarray()
     
@@ -39,6 +44,8 @@ def ComputeMean_with_asrry():
     return intensity_mean_asrry
 
 def RealTime_Extract():
+
+    file_path = InputFile()
     with nd2.ND2File(file_path) as f:
         if hasattr(f, "timestamps"):
             times = np.array(f.timestamps) / 60
@@ -49,7 +56,8 @@ def RealTime_Extract():
 total_intensity = []
 max_intensity = []
 median_intensity = []  
-def Compute_tot_max():
+def Compute_tot_max(file_path):
+
     with nd2.ND2File(file_path) as f:
         data = f.asarray()
 
@@ -62,7 +70,7 @@ def Compute_tot_max():
 
     return total_intensity, max_intensity, median_intensity 
 
-def Auto_ROI_brightest_region():
+def Auto_ROI_brightest_region(file_path):
 
     with nd2.ND2File(file_path) as f:
 
@@ -99,7 +107,7 @@ def Auto_ROI_brightest_region():
 
     return mean_intensity_roi
 
-def Compute_intensity_timeframe(n_plots):
+def Compute_intensity_timeframe(file_path, n_plots):
 
     # -----------------------------
     # INPUT

@@ -64,7 +64,7 @@ uv sync
 The project is designed with a **single entry point**.
 
 ```bash
-uv run python src/fluorescence_loader/plot_intensity.py
+uv run python src/fluorescence_loader/plot_intensity.py --file_path /Users/tanmay/LenevoINFN/Work/BratatiImageJ/InFile/nd005.nd2
 ```
 
 ---
