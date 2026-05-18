@@ -115,7 +115,7 @@ def plot_xy_intensity(vmin, vmax, data, indices, n_plots = 10, plot_diretory=Non
     #if args.frame_indices:
     fig, axes = plt.subplots(1, 3, figsize=(15, 6))
     #else:
-        #fig, axes = plt.subplots(2, 5, figsize=(15, 6))
+        #fig, axes = plt.subplots(2, 5, figsize=(15, 6)) #Need to fix it
 
     axes = axes.ravel()
 
