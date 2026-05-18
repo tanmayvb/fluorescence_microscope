@@ -19,7 +19,12 @@ parser.add_argument(
         default="Output",
         help="Directory to write output plos directory",
     )
-
+parser.add_argument(
+    "--n_plots",
+    type=int,
+    default=10,
+    help="Number of frames to plot"
+)
 
 def plot_intensity(mean_intensity, plot_diretory):
     plt.plot(mean_intensity, marker='o')
@@ -110,7 +115,7 @@ def plot_xy_intensity(vmin, vmax, data, indices, n_plots = 10, plot_diretory=Non
     for ax, idx in zip(axes, indices):
         frame = data[idx].compute()
 
-        im = ax.imshow(frame, cmap='gray', vmin=vmin, vmax=vmax)
+        im = ax.imshow(frame, cmap='afmhot', vmin=vmin, vmax=vmax)
         ax.set_title(f"T={idx}")
         ax.axis('off')
 
@@ -152,10 +157,10 @@ def main():
 
     plot_intensity(mean_intensity, plot_diretory)  #open it
 
-    dt = 15 / 94
-    times = np.arange(94) * dt
+    ##dt = 15 / 94
+    ##times = np.arange(94) * dt
 
-    plot_intensity_realtime(times, mean_intensity, plot_diretory) #Open it)
+    ##plot_intensity_realtime(times, mean_intensity, plot_diretory) #Open it)
 
     total_intn, max_intn, median =  Compute_tot_max(infile)
     

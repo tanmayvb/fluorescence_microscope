@@ -1,11 +1,12 @@
 [project]
 name = "fluorescence_loader"
 version = "0.1.0"
-description = "fluorescence microscopy"
-authors = [{ name = "Your Name", email = "your@email.com" }]
+description = "Machine learning and structural analysis pipeline for microscopy and material-science imaging"
+authors = [{ name = "Bratati Das", email = "your@email.com" }]
 requires-python = ">=3.10"
 dependencies = [
     "numpy",
+    "scipy",
     "tifffile",
     "lxml",
     "pandas",
@@ -17,12 +18,24 @@ dependencies = [
     "tifffile",
     "bioio-tifffile",
     "bioio-ome-tiff",
+    "scikit-image",
     "ome-types",
     "xarray",
     "dask[array]",
     "nd2",
     "matplotlib",
-    "scipy"
+    "scipy",
+    "torch",
+    "torchvision",
+     # -------------------------
+    # Data handling
+    # -------------------------
+    "dask[array]",
+
+    # -------------------------
+    # Utilities
+    # -------------------------
+    "tqdm",
 ]
 
 
