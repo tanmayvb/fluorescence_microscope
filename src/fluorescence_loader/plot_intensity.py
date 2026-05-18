@@ -5,6 +5,12 @@ import argparse
 from pathlib import Path
 from fluorescence_loader.compute_intensity import Compute_with_asrry, ComputeMean_with_asrry, Compute_tot_max, Auto_ROI_brightest_region, Compute_intensity_timeframe
 
+#==============================================================================================================================================================
+#Run by default : uv run python plot_intensity.py --file_path /Users/tanmay/LenevoINFN/Work/BratatiImageJ/InFile/nd005.nd2 --plot_folder plot_one --n_plots 10 --n_cols 5
+
+# Run when want to restrict plots with your own choince: uv run python plot_intensity.py --file_path /Users/tanmay/LenevoINFN/Work/BratatiImageJ/InFile/nd005.nd2 --plot_folder plot_one --n_plots 3 --n_cols 3 --frame_indices 0 10 20
+#===============================================================================================================================================================
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -19,11 +25,19 @@ parser.add_argument(
         default="Output",
         help="Directory to write output plos directory",
     )
+
 parser.add_argument(
     "--n_plots",
     type=int,
     default=10,
     help="Number of frames to plot"
+)
+
+parser.add_argument(
+    "--n_cols",
+    type=int,
+    default=10,
+    help="Number of ncols to plot"
 )
 
 parser.add_argument(
@@ -98,11 +112,11 @@ def plot_auto_roi(time, mean_intensity, plot_diretory=None, visroi=None):
         plt.close()
         #plt.show()
 
-def plot_xy_intensity(vmin, vmax, data, indices, n_plots = 10, plot_diretory=None):
+def plot_xy_intensity(vmin, vmax, data, indices, n_plots = 10, ncols = 1, plot_diretory=None):
     # -----------------------------
     # CREATE GRID PLOT
     # -----------------------------
-    ncols = 5
+    ncols = ncols
     nrows = int(np.ceil(n_plots / ncols))
 
     # -----------------------------
@@ -113,9 +127,9 @@ def plot_xy_intensity(vmin, vmax, data, indices, n_plots = 10, plot_diretory=Non
     print(f"Selected frames: {indices}")
 
     #if args.frame_indices:
-    fig, axes = plt.subplots(1, 3, figsize=(15, 6))
+    #fig, axes = plt.subplots(1, 3, figsize=(15, 6))
     #else:
-        #fig, axes = plt.subplots(2, 5, figsize=(15, 6)) #Need to fix it
+    fig, axes = plt.subplots(nrows, ncols, figsize=(15, 6)) #Need to fix it
 
     axes = axes.ravel()
 
@@ -182,10 +196,12 @@ def main():
     time = np.arange(len(intensity_roi_mean))
 
     plot_auto_roi(time, intensity_roi_mean, plot_diretory) #open it
-
-    
+   
+   
+    nplots = args.n_plots 
+    ncols = args.n_cols
     vmin, vmax, data_intensity, indices  = Compute_intensity_timeframe(infile, args.n_plots, args.frame_indices)
-    plot_xy_intensity(vmin, vmax, data_intensity, indices, 10, plot_diretory)
+    plot_xy_intensity(vmin, vmax, data_intensity, indices, nplots, ncols, plot_diretory)
 
     
     print("\n==================\033[92mRun Sucessfully\033[0m========================")
